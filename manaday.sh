@@ -2,7 +2,7 @@
 echo "Starting cmd a day!" 
 echo ""
 echo "1: Checking the dependancies..."
-manlib='/home/morne/dev/bash/src/man/deploy/manlib'
+manlib='/home/_mkruge19/dev/bash/manaday/manlib'
 cd $manlib
 
 manualsfound=$(ls -lR | grep ^d | wc -l)
@@ -49,7 +49,7 @@ echo "2: done"
 
 echo ""
 echo "3: starting man selection..."
-completed='/home/morne/dev/bash/src/man/deploy/completed'
+completed='/home/_mkruge19/dev/bash/manaday/completed'
 
 mansentcounter=$(cat $completed| wc -l)
 echo "Total commands sent (NOT including todays!)=" $mansentcounter
@@ -70,7 +70,30 @@ while true; do
 	    echo "  > this was allready done - generate a new number..."
 	else
 	    echo "  > This was not yet done - send the mail!"
-	   	#TODO - Send the mail
+
+        while read recipient; do
+          echo "sending mail to: $recipient"
+          manpath=$(ls "/home/_mkruge19/dev/bash/manaday/manlib/$genid"/*.man)
+
+          #manpath=$(echo ls "/home/_mkruge19/dev/bash/manaday/manlib/$genid/*.man")
+          #echo $manpath
+          #manpath='/home/_mkruge19/dev/bash/mail/0/cp.man'
+          recipients="$recipient"
+          subject='Manaual of the day is :  '$(awk '/NAME/{getline; print}' $manpath | xargs)
+          echo "subject is $subject"
+          from="postman"
+          message=$(cat $manpath )
+
+          /usr/sbin/sendmail "$recipients" <<EOF
+          subject:$subject"bla"
+          from:$from
+          $message
+          $subject
+EOF
+
+        done < /home/_mkruge19/dev/bash/manaday/recipients
+
+
 	    #insert the manid that was sent into the completed list 
 	    echo $genid  >> $completed
 	    echo "3: done"
