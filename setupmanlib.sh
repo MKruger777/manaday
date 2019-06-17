@@ -4,6 +4,13 @@ echo -e "\n1. Retrieve the manuals and save to file."
 while read p; do
   echo $p
   man $p > /home/_mkruge19/dev/bash/manaday/manlib/$p.man
+  if [[ -s /home/_mkruge19/dev/bash/manaday/manlib/$p.man ]]; then
+      echo "file has something";
+  else
+      echo "file is empty and will be deleted!"
+      rm /home/_mkruge19/dev/bash/manaday/manlib/$p.man
+  fi
+
 done < /home/_mkruge19/dev/bash/manaday/mansrc
 echo "1. done"
 
