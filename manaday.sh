@@ -82,8 +82,8 @@ while true; do
           #echo $manpath
           #manpath='/home/_mkruge19/dev/bash/mail/0/cp.man'
           recipients="$recipient"
-          subject= 'Manaual of the day is :  '$(awk '/NAME/{getline; print}' $manpath | xargs)
-          echo "subject is $subject"
+          mantitle=$(basename "$manpath" | sed 's/\.[^.]*$//')
+          subject="Manual of the day is : $mantitle"
           from="postman"
           message=$(cat $manpath )
 
