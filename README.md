@@ -22,7 +22,7 @@ So somewhere I got onto the idea to apply my new-found knowledge write something
 + AWK
 + Working and configured sendmail  
 
-* Attenion! Unfortunately there are some very ugly hardcoded paths all over the show - you will need to change these to your location.
+*Attention! Unfortunately there are some very ugly hardcoded paths all over the show - you will need to change these to your location.
 Fixing these in a neat way will be solved by : https://github.com/MKruger777/manaday/issues/1*
 
 ## Contributing
