@@ -1,17 +1,24 @@
 #! /bin/bash
 #set -x
 echo "Starting cmd a day!"
-echo "my log" >> /home/_mkruge19/dev/bash/manaday/logs/mylog
+SCRIPT_ROOT_DIR=${PWD}
+echo "Script executed from: ${SCRIPT_ROOT_DIR}"
+#Clearout the manlib - we want this clean during the running of the initial setup
+if [ -e ${SCRIPT_ROOT_DIR}/logs ];then rm -rf ${SCRIPT_ROOT_DIR}/logs ; fi  
+mkdir -p ${SCRIPT_ROOT_DIR}/logs
+
+#setting the 
+echo "script starting " >> ${SCRIPT_ROOT_DIR}/logs/mylog 
 echo ""
 echo "1: Checking the dependancies..."
-manlib='/home/_mkruge19/dev/bash/manaday/manlib'
+manlib="${SCRIPT_ROOT_DIR}/manlib"
 cd $manlib
 
 manualsfound=$(ls -lR | grep ^d | wc -l)
 
 if [ "$manualsfound" -eq "0" ]
   then
-        echo "No man folders found in manlib. These are required to continue - please investigate! Script will now exit."
+   	echo "No man folders found in manlib. These are required to continue - please investigate! Script will now exit."
     exit
 fi
 
@@ -26,9 +33,9 @@ counter=0
 foldername=""
 foldernames=()
 for afolder in $folderlist; do
-        #echo $afolder
-        foldernames[$counter]=$afolder
-        #echo ${foldernames[$counter]}
+	#echo $afolder
+	foldernames[$counter]=$afolder
+	#echo ${foldernames[$counter]}
     let counter=counter+1
 done
 IFS=$'\n'
@@ -36,10 +43,10 @@ IFS=$'\n'
 
 if [ "${#foldernames[@]}" -le "0" ]
   then
-        echo "No man folders found. Please investigate! Script will now exit."
+   	echo "No man folders found. Please investigate! Script will now exit."
     exit
 else
-                echo "  > man folders found=${#foldernames[@]}. Good to go!"
+		echo "  > man folders found=${#foldernames[@]}. Good to go!"		
 fi
 
 
@@ -51,34 +58,33 @@ echo "2: done"
 
 echo ""
 echo "3: starting man selection..."
-completed='/home/_mkruge19/dev/bash/manaday/completed'
+completed="${SCRIPT_ROOT_DIR}/completed"
 
 mansentcounter=$(cat $completed | wc -l)
 echo "Total commands sent (NOT including todays!)=" $mansentcounter
 
 if [ "$mansentcounter" -ge "$max" ]
   then
-        echo "All manuals were sent. Resetting the completed file..."
-        > completed
+   	echo "All manuals were sent. Resetting the completed file..."
+   	> completed
 fi
 
 while true; do
-        #generate random number between the smallest and largest number...
-        genid=$(shuf -i $min-$max -n 1)
-        echo "The man id for today is: $genid"
-        echo "$genid" >> /home/_mkruge19/dev/bash/manaday/logs/mylog
+	#generate random number between the smallest and largest number...
+	genid=$(shuf -i $min-$max -n 1)
+	echo "The man id for today is: $genid"
+        echo "$genid" >> ${SCRIPT_ROOT_DIR}/logs/mylog
 
-        if grep -Fxq $genid $completed
-        then
-            echo "  > this was allready done - generate a new number..."
-        else
-            echo "  > This was not yet done - send the mail!"
+	if grep -Fxq $genid $completed
+	then
+	    echo "  > this was allready done - generate a new number..."
+	else
+	    echo "  > This was not yet done - send the mail!"
 
         while read recipient; do
           echo "sending mail to: $recipient"
-          manpath=$(ls "/home/_mkruge19/dev/bash/manaday/manlib/$genid"/*.man)
-
-          #manpath=$(echo ls "/home/_mkruge19/dev/bash/manaday/manlib/$genid/*.man")
+          manpath=$(ls "${SCRIPT_ROOT_DIR}/manlib/$genid"/*.man)
+          #manpath=$(echo ls "${SCRIPT_ROOT_DIR}/manlib/$genid/*.man")
           #echo $manpath
           #manpath='/home/_mkruge19/dev/bash/mail/0/cp.man'
           recipients="$recipient"
@@ -88,17 +94,17 @@ while true; do
           message=$(cat $manpath )
 
           /usr/sbin/sendmail "$recipients" <<EOF
-Subject: $subject
+Subject: $subject 
 From: $from
 $message
 EOF
 
-        done < /home/_mkruge19/dev/bash/manaday/recipients
+        done < ${SCRIPT_ROOT_DIR}/recipients
 
 
-            #insert the manid that was sent into the completed list
-            echo $genid  >> $completed
-            echo "3: done"
-            break
-        fi
+	    #insert the manid that was sent into the completed list 
+	    echo $genid  >> $completed
+	    echo "3: done"
+	    break
+	fi
 done
