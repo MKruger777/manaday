@@ -1,7 +1,7 @@
-#! /bin/bash
+#!/bin/bash
 #set -x
 echo "Starting cmd a day!"
-SCRIPT_ROOT_DIR=${PWD}
+SCRIPT_ROOT_DIR=$(dirname $(readlink -f $0))
 echo "Script executed from: ${SCRIPT_ROOT_DIR}"
 #Clearout the manlib - we want this clean during the running of the initial setup
 if [ -e ${SCRIPT_ROOT_DIR}/logs ];then rm -rf ${SCRIPT_ROOT_DIR}/logs ; fi  
