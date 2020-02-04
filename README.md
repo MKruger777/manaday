@@ -4,7 +4,7 @@
 This pet project started after following a 3 day Linux course by the legendary (well in the Netherlands anyway) Hendrik-Jan Thomassen. Being super inspired and pumped to continue on my learning journey with bash/ Linux, I was desperately searching for a means or strategy to achieve this.  
 
 ## Solution
-So somewhere I got onto the idea to apply my new-found knowledge write something in bash that will help me learn more about bash :- ) This will be achieved by delivering a bash/Linux manual in my mailbox every day. From the code, it should be pretty obvious that this so-called "journey" has bearly started for me - a mere novice.
+So somewhere I got onto the idea to apply my new-found knowledge to write something in bash that will help me learn more about bash :- ) This will be achieved by delivering a bash/Linux manual in my mailbox every day. From the code, it should be pretty obvious that this so-called "journey" has bearly started for me - a mere novice.
 
 ## The mechanism
 + We harvest some manuals from the os via the setup the setupmanlib.sh  
